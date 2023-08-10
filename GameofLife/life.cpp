@@ -9,52 +9,52 @@ using namespace std;
 class Animal;
 
 class World {
-private:
-  Animal* grid[10][10];
-  int count;
-public:
-  World(int w, int s);
-  int run();
-  void set(int x, int y, Animal* w);
-
-  //type  1 is w and type 2 is s
-  void move(int type);
-  void breed(int type);
-  void starve(int type);
-  Animal* get(int x, int y);
-  bool inBound(int x, int y);
-  bool sheephere(int x, int y);
-  void printb();
+  private:
+    Animal* grid[10][10];
+    int count;
+  public:
+    World(int w, int s);
+    int run();
+    void set(int x, int y, Animal* w);
+  
+    //type  1 is w and type 2 is s
+    void move(int type);
+    void breed(int type);
+    void starve(int type);
+    Animal* get(int x, int y);
+    bool inBound(int x, int y);
+    bool sheephere(int x, int y);
+    void printb();
 };
 
 
 
 class Animal {
-protected:
-  int x, y;
-  World* w;
-  bool moved;
-  int breeding;
-  int starving;
-public:
-  Animal(int x, int y, World* w);
-  virtual void move() = 0;
-  virtual void breed() = 0;
-  virtual void starve() = 0;
-  virtual int Type() = 0;
-  virtual void kill() {}
+  protected:
+    int x, y;
+    World* w;
+    bool moved;
+    int breeding;
+    int starving;
+  public:
+    Animal(int x, int y, World* w);
+    virtual void move() = 0;
+    virtual void breed() = 0;
+    virtual void starve() = 0;
+    virtual int Type() = 0;
+    virtual void kill() {}
 };
 
 
 
 class Sheep : public Animal {
-public:
-  Sheep(int x, int y, World* w);
-  void move();
-  void breed();
-  void starve();
-  int Type() {return 2;}
-  void kill();
+  public:
+    Sheep(int x, int y, World* w);
+    void move();
+    void breed();
+    void starve();
+    int Type() {return 2;}
+    void kill();
 };
 
 void Sheep::kill() {
@@ -63,13 +63,13 @@ void Sheep::kill() {
 }
 
 class Wolf : public Animal {
-public:
-  Wolf(int x, int y, World* w);
-  void move();
-  void breed();
-  void starve();
-  int Type() {return 1;}
-  void kill();
+  public:
+    Wolf(int x, int y, World* w);
+    void move();
+    void breed();
+    void starve();
+    int Type() {return 1;}
+    void kill();
 };
 
 void Wolf::kill() {
@@ -82,19 +82,14 @@ int World::run() {
   while(!stop) {
     int temp = (get(0, 0)!=nullptr?get(0,0)->Type():0);
     move(1);
-    //cout<<"1"<<endl;
     move(2);
-    //cout<<"2"<<endl;
     starve(1);
-    //cout<<"3"<<endl;
     breed(1);
-    //cout<<"4"<<endl;
     breed(2);
-    //cout<<"5"<<endl;
     stop = true;
     for(int x = 0; x < 10; x++) {
       for(int y = 0; y < 10; y++) {
-        if(temp != (get(x, y)!=nullptr?get(x,y)->Type():0))
+        if(temp != (get(x, y) != nullptr?get(x,y)->Type():0))
           stop = false;
       }
     }
@@ -103,7 +98,7 @@ int World::run() {
     count++;
   }
   cout<<"Count "<<count<<endl;
-  int temp = (get(0, 0)!=nullptr?get(0,0)->Type():0);
+  int temp = (get(0, 0) != nullptr?get(0,0)->Type():0);
   return temp;
 }
 
@@ -134,10 +129,9 @@ World::World(int w, int s) {
     int x = rand() % 10;
     int y = rand() % 10;
     while(temp == false) {
-      if(grid[x][y]==nullptr) {
+      if(grid[x][y] == nullptr) {
         this->set(x, y, new Wolf(x, y, this));
         temp = true;
-        //cout<<"placed w"<<endl;
       } else {
         x = rand() % 10;
         y = rand() % 10;
@@ -152,7 +146,6 @@ World::World(int w, int s) {
       if(grid[x][y]==nullptr) {
         this->set(x, y, new Sheep(x, y, this));
         temp = true;
-        //cout<<"placed s"<<endl;
       } else {
         x = rand() % 10;
         y = rand() % 10;
@@ -186,12 +179,10 @@ Animal::Animal(int x, int y, World* w) {
 }
 
 void Animal::move() {
-  //srand(time(NULL));
-  //cout<<"WOLF PLS"<<endl;
   int dir = rand() % 4;
   breeding++;
   moved = true;
-  if(dir == 0) {//up
+  if(dir == 0) { //up
     if(w->inBound(x, y-1) && w->get(x,y-1) == nullptr) {
       w->set(x, y, nullptr);
       w->set(x, --y, this);
@@ -360,19 +351,15 @@ void Wolf::starve() {
 }
 
 void Wolf::move() {
-  //cout<<"move"<<endl;
   if(!moved) {
-    //cout<<"notmov"<<endl;
     int start = rand() % 4;
     for(int i = 0; i < 4; i++) {
       if(start==0 && w->sheephere(x, y-1)) {//how to say found sheep
-        //cout<<"is here"<<endl;
         starving = 0;
         breeding++;
         w->set(x, y, nullptr);
         w->get(x, y-1)->kill();
         w->set(x, --y, this);
-        //cout<<"true1"<<endl;
         moved = true;
         i=4;
       } else if (start==1 && w->sheephere(x, y+1)) {
@@ -382,7 +369,6 @@ void Wolf::move() {
         w->get(x, y+1)->kill();
         w->set(x, ++y, this);
         i=4;
-        //cout<<"true2"<<endl;
         moved = true;
       } else if (start == 2 && w->sheephere(x-1, y)) {
         breeding++;
@@ -391,7 +377,6 @@ void Wolf::move() {
         w->get(x-1, y)->kill();
         w->set(--x, y, this);
         i=4;
-        //cout<<"true3"<<endl;
         moved = true;
       } else if (start == 3 && w->sheephere(x+1, y)) {
         breeding++;
@@ -399,22 +384,20 @@ void Wolf::move() {
         w->set(x, y, nullptr);
         w->get(x+1, y)->kill();
         w->set(++x, y, this);
-        //cout<<"true4"<<endl;
         moved = true;
         i=4;
       }
       start = (start + 1) % 4;
     }
     if(moved==false) {
-      //cout<<"here"<<endl;
       Animal::move();
     }
   }
 }
 
 bool World::sheephere(int x, int y) {
-  if(get(x, y)!=nullptr&&inBound(x,y)) {
-    return 2==get(x, y)->Type();
+  if(get(x, y) != nullptr && inBound(x,y)) {
+    return 2 == get(x, y)->Type();
   }
   return false;
 }
@@ -425,16 +408,10 @@ int main() {
   srand(time(NULL));
   string t;
   double avg = 0;
-  //cin>>t;
-  //while(t!="q") {
   for(int i = 0; i < 1000; i++) {
     World test(1, 50);
-    //test.printb();
     cout<<endl;
-    //cout<<"before"<<endl;
     avg += test.run();
-    //cout<<"after testrun"<<endl;
-    //cin>>t;
   }
   avg = avg/2000;
   cout<<"avg "<<avg;
