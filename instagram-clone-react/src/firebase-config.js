@@ -5,7 +5,7 @@ import 'firebase/compat/storage';
 //import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAusxiLryo1ofEMrEQhowq_Q6uUe2CrypE",
+    apiKey: "***",
     authDomain: "instagram-clone-react-6269d.firebaseapp.com",
     projectId: "instagram-clone-react-6269d",
     storageBucket: "instagram-clone-react-6269d.appspot.com",
